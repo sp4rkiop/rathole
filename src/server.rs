@@ -286,7 +286,7 @@ async fn do_control_channel_handshake<T: 'static + Transport>(
 
     // Generate a nonce
     let mut nonce = vec![0u8; HASH_WIDTH_IN_BYTES];
-    rand::thread_rng().fill_bytes(&mut nonce);
+    rand::rng().fill_bytes(&mut nonce);
 
     // Send hello
     let hello_send = Hello::ControlChannelHello(

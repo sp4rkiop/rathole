@@ -151,7 +151,7 @@ impl AsyncWrite for WebsocketTunnel {
             .poll_ready(cx)
             .map_err(|err| Error::new(ErrorKind::Other, err)))?;
 
-        match Pin::new(&mut sw.inner).start_send(Message::Binary(buf.to_vec())) {
+        match Pin::new(&mut sw.inner).start_send(Message::Binary(Bytes::copy_from_slice(buf))) {
             Ok(()) => Poll::Ready(Ok(buf.len())),
             Err(e) => Poll::Ready(Err(Error::new(ErrorKind::Other, e))),
         }
@@ -194,10 +194,7 @@ impl Transport for WebsocketTransport {
             .as_ref()
             .ok_or_else(|| anyhow!("Missing websocket config"))?;
 
-        let conf = WebSocketConfig {
-            write_buffer_size: 0,
-            ..WebSocketConfig::default()
-        };
+        let conf = WebSocketConfig::default().write_buffer_size(0);
         let sub = match wsconfig.tls {
             true => SubTransport::Secure(TlsTransport::new(config)?),
             false => SubTransport::Insecure(TcpTransport::new(config)?),
@@ -225,11 +222,11 @@ impl Transport for WebsocketTransport {
     }
 
     async fn handshake(&self, conn: Self::RawStream) -> anyhow::Result<Self::Stream> {
-        let tsream = match &self.sub {
+        let tstream = match &self.sub {
             SubTransport::Insecure(t) => TransportStream::Insecure(t.handshake(conn).await?),
             SubTransport::Secure(t) => TransportStream::Secure(t.handshake(conn).await?),
         };
-        let wsstream = accept_async_with_config(tsream, Some(self.conf)).await?;
+        let wsstream = accept_async_with_config(tstream, Some(self.conf)).await?;
         let tun = WebsocketTunnel {
             inner: StreamReader::new(StreamWrapper { inner: wsstream }),
         };
@@ -243,7 +240,7 @@ impl Transport for WebsocketTransport {
             SubTransport::Insecure(t) => TransportStream::Insecure(t.connect(addr).await?),
             SubTransport::Secure(t) => TransportStream::Secure(t.connect(addr).await?),
         };
-        let (wsstream, _) = client_async_with_config(url, tstream, Some(self.conf))
+        let (wsstream, _) = client_async_with_config(url.as_str(), tstream, Some(self.conf))
             .await
             .expect("failed to connect");
         let tun = WebsocketTunnel {

@@ -2,15 +2,14 @@
 
 ![rathole-logo](./docs/img/rathole-logo.png)
 
-[![GitHub stars](https://img.shields.io/github/stars/rapiz1/rathole)](https://github.com/rapiz1/rathole/stargazers)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/rapiz1/rathole)](https://github.com/rapiz1/rathole/releases)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/rapiz1/rathole/rust.yml?branch=main)
-[![GitHub all releases](https://img.shields.io/github/downloads/rapiz1/rathole/total)](https://github.com/rapiz1/rathole/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/rapiz1/rathole)](https://hub.docker.com/r/rapiz1/rathole)
-[![Join the chat at https://gitter.im/rapiz1/rathole](https://badges.gitter.im/rapiz1/rathole.svg)](https://gitter.im/rapiz1/rathole?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GitHub stars](https://img.shields.io/github/stars/sp4rkiop/rathole)](https://github.com/sp4rkiop/rathole/stargazers)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/sp4rkiop/rathole)](https://github.com/sp4rkiop/rathole/releases)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/sp4rkiop/rathole/rust.yml?branch=main)
+[![GitHub all releases](https://img.shields.io/github/downloads/sp4rkiop/rathole/total)](https://github.com/sp4rkiop/rathole/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/sp4rkiop/rathole)](https://hub.docker.com/r/sp4rkiop/rathole)
+[![Join the chat at https://gitter.im/sp4rkiop/rathole](https://badges.gitter.im/sp4rkiop/rathole.svg)](https://gitter.im/sp4rkiop/rathole?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[English](README.md) | [简体中文](README-zh.md)
-
+[English](README.md)
 A secure, stable and high-performance reverse proxy for NAT traversal, written in Rust
 
 rathole, like [frp](https://github.com/fatedier/frp) and [ngrok](https://github.com/inconshreveable/ngrok), can help to expose the service on the device behind the NAT to the Internet, via a server with a public IP.
@@ -37,7 +36,7 @@ rathole, like [frp](https://github.com/fatedier/frp) and [ngrok](https://github.
 
 ## Quickstart
 
-A full-powered `rathole` can be obtained from the [release](https://github.com/rapiz1/rathole/releases) page. Or [build from source](docs/build-guide.md) **for other platforms and minimizing the binary**. A [Docker image](https://hub.docker.com/r/rapiz1/rathole) is also available.
+A full-powered `rathole` can be obtained from the [release](https://github.com/sp4rkiop/rathole/releases) page. Or [build from source](docs/build-guide.md) **for other platforms and minimizing the binary**. A [Docker image](https://hub.docker.com/r/sp4rkiop/rathole) is also available.
 
 The usage of `rathole` is very similar to frp. If you have experience with the latter, then the configuration is very easy for you. The only difference is that configuration of a service is split into the client side and the server side, and a token is mandatory.
 

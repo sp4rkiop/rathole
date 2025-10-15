@@ -20,4 +20,4 @@ But that doesn't mean it's not useful for other purposes. In the future, more co
 
 - *Caching `local_ip`'s DNS records*
 
-  As responded in [issue #183](https://github.com/rapiz1/rathole/issues/183), `local_ip` cache is not feasible because we have no reliable way to detect ip change. Handle DNS TTL and so on should be done with a DNS server, not a client. Caching ip is generally dangerous for clients. If you care about the `local_ip` query you can set up a local DNS server and enable caching. Then the local lookup should be trivial.
+  As responded in [issue #183](https://github.com/sp4rkiop/rathole/issues/183), `local_ip` cache is not feasible because we have no reliable way to detect ip change. Handle DNS TTL and so on should be done with a DNS server, not a client. Caching ip is generally dangerous for clients. If you care about the `local_ip` query you can set up a local DNS server and enable caching. Then the local lookup should be trivial.

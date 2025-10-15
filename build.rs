@@ -1,19 +1,31 @@
 use anyhow::Result;
-use vergen::{vergen, Config, SemverKind};
+use std::env;
+use vergen_gitcl::{
+    BuildBuilder, CargoBuilder, Emitter, GitclBuilder, RustcBuilder, SysinfoBuilder,
+};
 
 fn main() -> Result<()> {
-    let mut config = Config::default();
-    // Change the SEMVER output to the lightweight variant
-    *config.git_mut().semver_kind_mut() = SemverKind::Lightweight;
-    // Add a `-dirty` flag to the SEMVER output
-    *config.git_mut().semver_dirty_mut() = Some("-dirty");
-    // Generate the instructions
-    if let Err(e) = vergen(config) {
-        eprintln!("error occurred while generating instructions: {:?}", e);
-        let mut config = Config::default();
-        *config.git_mut().enabled_mut() = false;
-        vergen(config)
-    } else {
-        Ok(())
+    let build = BuildBuilder::all_build()?;
+    let cargo = CargoBuilder::all_cargo()?;
+    let git = GitclBuilder::all_git()?;
+    let rustc = RustcBuilder::all_rustc()?;
+    let si = SysinfoBuilder::all_sysinfo()?;
+
+    // Prepare the emitter and add all standard vergen instructions
+    let mut emitter = Emitter::default();
+    emitter
+        .add_instructions(&build)?
+        .add_instructions(&cargo)?
+        .add_instructions(&git)?
+        .add_instructions(&rustc)?
+        .add_instructions(&si)?;
+
+    // ✅ Manually add Cargo build profile (debug/release)
+    if let Ok(profile) = env::var("PROFILE") {
+        println!("cargo:rustc-env=CARGO_PROFILE={}", profile);
     }
+
+    // Emit all vergen-generated and custom variables
+    emitter.emit()?;
+    Ok(())
 }

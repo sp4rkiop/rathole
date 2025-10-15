@@ -1,7 +1,7 @@
-use clap::{AppSettings, ArgGroup, Parser};
+use clap::Parser;
 use lazy_static::lazy_static;
 
-#[derive(clap::ArgEnum, Clone, Debug, Copy)]
+#[derive(clap::ValueEnum, Clone, Debug, Copy)]
 pub enum KeypairType {
     X25519,
     X448,
@@ -9,7 +9,7 @@ pub enum KeypairType {
 
 lazy_static! {
     static ref VERSION: &'static str =
-        option_env!("VERGEN_GIT_SEMVER_LIGHTWEIGHT").unwrap_or(env!("VERGEN_BUILD_SEMVER"));
+        option_env!("VERGEN_GIT_DESCRIBE").unwrap_or(env!("CARGO_PKG_VERSION"));
     static ref LONG_VERSION: String = format!(
         "
 Build Timestamp:     {}
@@ -22,12 +22,12 @@ cargo Profile:       {}
 cargo Features:      {}
 ",
         env!("VERGEN_BUILD_TIMESTAMP"),
-        env!("VERGEN_BUILD_SEMVER"),
+        env!("CARGO_PKG_VERSION"),
         option_env!("VERGEN_GIT_SHA"),
         option_env!("VERGEN_GIT_COMMIT_TIMESTAMP"),
         option_env!("VERGEN_GIT_BRANCH"),
         env!("VERGEN_CARGO_TARGET_TRIPLE"),
-        env!("VERGEN_CARGO_PROFILE"),
+        env!("CARGO_PROFILE"),
         env!("VERGEN_CARGO_FEATURES")
     );
 }
@@ -37,19 +37,13 @@ cargo Features:      {}
     about,
     version(*VERSION),
     long_version(LONG_VERSION.as_str()),
-    setting(AppSettings::DeriveDisplayOrder)
 )]
-#[clap(group(
-            ArgGroup::new("cmds")
-                .required(true)
-                .args(&["CONFIG", "genkey"]),
-        ))]
 pub struct Cli {
     /// The path to the configuration file
     ///
     /// Running as a client or a server is automatically determined
     /// according to the configuration file.
-    #[clap(parse(from_os_str), name = "CONFIG")]
+    #[clap(name = "CONFIG")]
     pub config_path: Option<std::path::PathBuf>,
 
     /// Run as a server
@@ -63,6 +57,6 @@ pub struct Cli {
     /// Generate a keypair for the use of the noise protocol
     ///
     /// The DH function to use is x25519
-    #[clap(long, arg_enum, value_name = "CURVE")]
+    #[clap(long, value_enum, value_name = "CURVE")]
     pub genkey: Option<Option<KeypairType>>,
 }

@@ -13,7 +13,6 @@ pub use config::Config;
 pub use constants::UDP_BUFFER_SIZE;
 
 use anyhow::Result;
-use base64::{engine::general_purpose, Engine as _};
 use tokio::sync::{broadcast, mpsc};
 use tracing::{debug, info};
 
@@ -40,6 +39,8 @@ fn get_str_from_keypair_type(curve: KeypairType) -> &'static str {
 
 #[cfg(feature = "noise")]
 fn genkey(curve: Option<KeypairType>) -> Result<()> {
+    use base64::{Engine as _, engine::general_purpose};
+
     let curve = curve.unwrap_or(DEFAULT_CURVE);
     let builder = snowstorm::Builder::new(
         format!(
@@ -174,8 +175,8 @@ mod tests {
 
     #[test]
     fn test_determine_run_mode() {
-        use config::*;
         use RunMode::*;
+        use config::*;
 
         struct T {
             cfg_s: bool,

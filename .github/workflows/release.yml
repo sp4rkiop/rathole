@@ -66,6 +66,30 @@ jobs:
             target: armv7-unknown-linux-musleabihf
             exe: rathole
             cross: true
+          - os: ubuntu-latest
+            target: mips-unknown-linux-gnu
+            exe: rathole
+            cross: true
+          - os: ubuntu-latest
+            target: mips-unknown-linux-musl
+            exe: rathole
+            cross: true
+          - os: ubuntu-latest
+            target: mipsel-unknown-linux-gnu
+            exe: rathole
+            cross: true
+          - os: ubuntu-latest
+            target: mipsel-unknown-linux-musl
+            exe: rathole
+            cross: true
+          - os: ubuntu-latest
+            target: mips64-unknown-linux-gnuabi64
+            exe: rathole
+            cross: true
+          - os: ubuntu-latest
+            target: mips64el-unknown-linux-gnuabi64
+            exe: rathole
+            cross: true
 
           - os: macos-latest
             target: x86_64-apple-darwin
@@ -94,23 +118,9 @@ jobs:
       - name: Install OpenSSL (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -y pkg-config libssl-dev
-      - name: Set OpenSSL env (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          echo "OPENSSL_INCLUDE_DIR=/usr/include" >> $GITHUB_ENV
-          echo "OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu" >> $GITHUB_ENV
-
       - name: Install OpenSSL (macOS)
         if: matrix.os == 'macos-latest'
         run: brew install openssl@3
-      - name: Set OpenSSL env (macOS)
-        if: matrix.os == 'macos-latest'
-        run: |
-          PREFIX=$(brew --prefix openssl@3)
-          echo "OPENSSL_DIR=$PREFIX" >> $GITHUB_ENV
-          echo "OPENSSL_INCLUDE_DIR=$PREFIX/include" >> $GITHUB_ENV
-          echo "OPENSSL_LIB_DIR=$PREFIX/lib" >> $GITHUB_ENV
-          echo "PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig" >> $GITHUB_ENV
 
       # Native build
       - name: Install target
@@ -132,7 +142,7 @@ jobs:
         run: cross test --release --target ${{ matrix.target }} --verbose --features embedded --no-default-features
       - name: Build release
         if: matrix.cross
-        run: cross build --release --target ${{ matrix.target }} --features vendored-openssl,embedded --no-default-features
+        run: cross build --release --target ${{ matrix.target }} --features embedded --no-default-features
 
       - name: Run UPX
         # Upx may not support some platforms. Ignore the errors

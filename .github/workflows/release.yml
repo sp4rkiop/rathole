@@ -2,8 +2,6 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "*"
   workflow_dispatch:
@@ -15,7 +13,7 @@ jobs:
   create_tag:
     name: Create tag from Cargo.toml
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'   # Only run this when main is pushed (not on tag)
+    if: github.event_name == 'workflow_dispatch'   # Only run this when main is pushed (not on tag) or triggered by workflow dispatch
     outputs:
       tag_name: ${{ steps.get_version.outputs.tag }}
     steps:
@@ -116,13 +114,24 @@ jobs:
           profile: minimal
           default: true
       
-      - name: Install OpenSSL
+      - name: Install OpenSSL (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install pkg-config libssl-dev
-      - name: Install OpenSSL
+        run: sudo apt-get install -y pkg-config libssl-dev
+      - name: Set OpenSSL env (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo "OPENSSL_DIR=/usr/lib/ssl" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
+
+      - name: Install OpenSSL (macOS)
         if: matrix.os == 'macos-latest'
         run: brew install openssl@3
-      
+      - name: Set OpenSSL env (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo "OPENSSL_DIR=$(brew --prefix openssl@3)" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=$(brew --prefix openssl@3)/lib/pkgconfig" >> $GITHUB_ENV
+
       # Native build
       - name: Install target
         if: matrix.cross == false

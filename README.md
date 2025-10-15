@@ -6,8 +6,7 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/sp4rkiop/rathole)](https://github.com/sp4rkiop/rathole/releases)
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/sp4rkiop/rathole/rust.yml?branch=main)
 [![GitHub all releases](https://img.shields.io/github/downloads/sp4rkiop/rathole/total)](https://github.com/sp4rkiop/rathole/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/sp4rkiop/rathole)](https://hub.docker.com/r/sp4rkiop/rathole)
-[![Join the chat at https://gitter.im/sp4rkiop/rathole](https://badges.gitter.im/sp4rkiop/rathole.svg)](https://gitter.im/sp4rkiop/rathole?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GHCR.io Docker Pulls](https://img.shields.io/badge/Docker_images-GHCR-blue?logo=docker)](https://ghcr.io/sp4rkiop/rathole/pkgs/container/rathole)
 
 [English](README.md)
 A secure, stable and high-performance reverse proxy for NAT traversal, written in Rust

@@ -62,13 +62,16 @@ fn load_client_config(config: &TlsConfig) -> Result<Option<ClientConfig>> {
             .with_context(|| "Failed to read certificate")?
     } else {
         // read from native
-        match rustls_native_certs::load_native_certs() {
-            Ok(certs) => certs.into_iter().next().unwrap(),
-            Err(e) => {
-                eprintln!("Failed to load native certs: {}", e);
-                return Ok(None);
-            }
+        let native_certs = rustls_native_certs::load_native_certs();
+        if !native_certs.errors.is_empty() {
+            eprintln!("Failed to load native certs: {:?}", native_certs.errors);
+            return Ok(None);
         }
+        if native_certs.certs.is_empty() {
+            eprintln!("No native certificates found");
+            return Ok(None);
+        }
+        native_certs.certs.into_iter().next().unwrap()
     };
 
     let mut root_certs = RootCertStore::empty();
